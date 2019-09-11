@@ -13,6 +13,23 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'PageController@welcome')->name('welcome');
+
+/**
+ * ---------------------------
+ * Start of website crawling
+ * routes
+ * ---------------------------
+ */
+Route::group([
+    'prefix' => 'crawling',
+], function () {
+    Route::get('', 'PageController@crawl')->name('crawl');
 });
+
+/**
+ * ---------------------------
+ * End of website crawling
+ * routes
+ * ---------------------------
+ */

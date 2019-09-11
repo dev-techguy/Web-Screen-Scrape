@@ -4,95 +4,80 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
     <!-- Styles -->
-    <style>
-        html, body {
-            background-color: #fff;
-            color: #636b6f;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .full-height {
-            height: 100vh;
-        }
-
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-
-        .position-ref {
-            position: relative;
-        }
-
-        .top-right {
-            position: absolute;
-            right: 10px;
-            top: 18px;
-        }
-
-        .content {
-            text-align: center;
-        }
-
-        .title {
-            font-size: 84px;
-        }
-
-        .links > a {
-            color: #636b6f;
-            padding: 0 25px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: .1rem;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-
-        .m-b-md {
-            margin-bottom: 30px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" type="text/css">
+    <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body>
-<div class="flex-center position-ref full-height">
-    @if (Route::has('login'))
-        <div class="top-right links">
-            @auth
-                <a href="{{ url('/home') }}">Home</a>
+<div class="container">
+    <div class="row m-5">
+        <div class="col-md-5">
+            <h3 class="text-center text-primary">{{ \App\Http\Controllers\PageController::stateTimer() }} User</h3>
+            <p>Follow the instructions below to see how to screen scrape a website. For this eaxample we are going to
+                scrape all the <b class="text-danger">h2</b> with links that is the anchor tag <i><b
+                        class="text-danger">a</b></i></p>
+            <ul>
+                <li>Enter the website url i.e <a href="#">http://domain.com or https://domain.co</a></li>
+                <li>Click the submit button.</li>
+                <li>Wait for the results to come.</li>
+            </ul>
+            <hr>
+            <form action="{{ route('crawl') }}" method="get" class="m-5">
+                <div class="form-group">
+                    <label for="url"><strong>Enter a website url</strong></label>
+                    <input type="url" name="url" id="url" class="form-control @error('url') is-invalid @enderror"
+                           required autofocus placeholder="https or http url">
+                    @error('url')
+                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary btn-lg float-right"><b>SUBMIT</b></button>
+                </div>
+            </form>
+            <br>
+            <br>
+            <hr>
+        </div>
+        <div class="col-md-1">&nbsp;</div>
+        <div class="col-md-6">
+            <h4 class="text-center text-primary"><strong>The Website Results Will Be Shown Here</strong></h4>
+            @if(!empty($crawler))
+                <h5 class="text-center">
+                    <hr>
+                    Results For <i><b>{{ $url }}</b></i>
+                    <hr>
+                </h5>
+            @endif
+            <p class="m-5">
+            @if(!empty($crawler))
+                @php($crawler->filter('h2 > a')->each(function ($node) {
+								 print  $node->text() . "\n";
+							 }))
             @else
-                <a href="{{ route('login') }}">Login</a>
-
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Register</a>
+                <center>
+                    <img src="{{ asset('img/warning.png') }}" alt=""
+                         style="width: 200px;!important;height: 200px;!important;">
+                </center>
                 @endif
-            @endauth
+                </p>
         </div>
-    @endif
-
-    <div class="content">
-        <div class="title m-b-md">
-            Laravel
+    </div>
+    <div class="row">
+        <div class="col-md-4">&nbsp;</div>
+        <div class="col-md-4">
+            <div class="card-footer">
+                <p class="text-center">&copy; CopyRight {{ date('Y') }} {{ config('app.name') }}</p>
+            </div>
         </div>
-
-        <div class="links">
-            <a href="https://laravel.com/docs">Docs</a>
-            <a href="https://laracasts.com">Laracasts</a>
-            <a href="https://laravel-news.com">News</a>
-            <a href="https://blog.laravel.com">Blog</a>
-            <a href="https://nova.laravel.com">Nova</a>
-            <a href="https://forge.laravel.com">Forge</a>
-            <a href="https://github.com/laravel/laravel">GitHub</a>
-        </div>
+        <div class="col-md-4">&nbsp;</div>
     </div>
 </div>
 </body>
