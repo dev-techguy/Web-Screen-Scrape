@@ -56,7 +56,7 @@ class PageController extends Controller {
             // Go to the symfony.com website
             $crawler = $client->request('GET', $request->url);
 
-            return \view('welcome', [
+            return view('welcome', [
                 'crawler' => $crawler,
                 'url' => $request->url,
             ]);
